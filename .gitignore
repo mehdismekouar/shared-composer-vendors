@@ -1,0 +1,6 @@
+# The repository folder is also the shared store: track only the tool itself
+/*
+!/.gitignore
+!/README.md
+!/LICENSE.md
+!/setup.php
