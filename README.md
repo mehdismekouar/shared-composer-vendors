@@ -252,6 +252,11 @@ find ~/domains -path '*/vendor/*' -lname '*framework_13.33.0*' | head
 chmod -R u+w ~/shared-vendors/vendors/laravel/framework_13.33.0 && rm -rf ~/shared-vendors/vendors/laravel/framework_13.33.0*
 ```
 
+## Credits
+
+- [Mehdi Mekouar](https://github.com/mehdismekouar)
+- Read the story behind it: [Shared Composer Vendors: beating the inode limit on shared hosting](https://mehdimekouar.com/articles/shared-composer-vendors-shared-hosting)
+
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
