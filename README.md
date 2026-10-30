@@ -185,7 +185,7 @@ pre-install-cmd → pre-autoload-dump → build (plugins and per-package scripts
 ```
 
 - **Plugins** (packages that extend Composer, like composer-patches) run during the build, as usual.
-- **Per-package scripts** (like `post-package-install`, which runs after each package is installed) also run during the build. They work on the new `vendor.next` folder.
+- **Per-package scripts** (like `post-package-install`, which runs after each package is installed) also run during the build, before the swap. A command among them that loads your packages still sees the old `vendor/` (see Known limits).
 
 New Laravel projects include a `pre-package-uninstall` script (`Illuminate\Foundation\ComposerScripts::prePackageUninstall`). The tool ignores it silently: it only does something when a package is uninstalled on a development machine, and this tool never uninstalls packages.
 
@@ -219,7 +219,7 @@ Folders are named `<package>_<version>`. Development versions (like `dev-main`) 
 ## Known limits
 
 - **Scripts for package updates and uninstalls never run** (`pre/post-package-update`, `pre/post-package-uninstall`). Every deploy installs all packages fresh into a new folder, so Composer only sees installs. Put that work in `post-package-install`.
-- **Per-package scripts written as commands see the old packages.** A script like `@php artisan ...` runs while the old `vendor/` is still the live one. Scripts written as PHP class methods (`App\Composer\Hooks::method`) receive the new packages.
+- **During the build, commands that load your packages see the old ones.** `pre-operations-exec`, `pre-package-install` and `post-package-install` run before the swap, while the old `vendor/` is still the live one. So a script like `@php artisan ...` in one of them loads the old packages. Move it to `post-install-cmd` or `post-autoload-dump`, which run after the swap. Or write it as a PHP class method (`App\Composer\Hooks::method`): it runs inside Composer and receives the new packages. Commands that don't use `vendor/`, like deleting a cache file, work in any event.
 - **`pre-autoload-dump` runs before the build**, not after the packages are installed as in a normal install.
 - **A dry run doesn't run your scripts**, because they could change your site (files, caches, even the database). It lists the scripts it skipped, and can't show changes they would make to packages.
 - **For about 2 minutes after a deploy that changes a package's version, some requests may still use the old version's files.** PHP remembers for 120 seconds where each file path leads (its "realpath cache"), to avoid asking the disk again. The old version is still in the shared folder, so PHP keeps opening it until it forgets. If your host lets you restart PHP (often a button in the control panel), do it after deploying.

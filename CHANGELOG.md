@@ -2,6 +2,11 @@
 
 All notable changes to `shared-composer-vendors` will be documented in this file.
 
+## v1.0.1 - 2026-10-30
+
+- Clearer note about scripts that run during the build (`pre-operations-exec`, `pre-package-install`, `post-package-install`). Only commands that load your packages, like `@php artisan`, see the old `vendor/`. The note now says so, and says where to move them: to `post-install-cmd`, or into a PHP class method.
+- README: the same explanation in "Composer scripts and plugins" and "Known limits".
+
 ## v1.0.0 - 2026-09-29
 
 First release: a deploy-time replacement for `composer install` that keeps one copy of each package version in a shared folder and links every project's `vendor/` to it, to save inodes and disk space on shared hosting.

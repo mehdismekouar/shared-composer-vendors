@@ -89,7 +89,7 @@ foreach (NEVER_FIRED_EVENTS as $event) {
 $buildEvents = array_values(array_filter(BUILD_EVENTS, fn (string $event): bool => !empty($scripts[$event])));
 foreach ($buildEvents as $event) {
     if (array_filter((array) $scripts[$event], fn ($entry): bool => !is_string($entry) || str_contains($entry, ' ') || !str_contains($entry, '::'))) {
-        say("Note: commands in your \"$event\" scripts run while the old vendor/ is still in use, so they see the old packages. Scripts written as PHP class methods get the new ones", 'yellow');
+        say("Note: commands in your \"$event\" scripts that load your packages (like @php artisan) run while the old vendor/ is still in use, so they see the old ones. Move them to post-install-cmd, or write them as PHP class methods, which get the new ones", 'yellow');
     }
 }
 
